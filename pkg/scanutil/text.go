@@ -36,13 +36,21 @@ func ScannNText(question string, n int, def string, fn ProcessText) string {
 	return def
 }
 
+// IsExt returns true if s is a valid extension
 func IsExt(s string) bool {
 	return s == filepath.Ext(s)
 }
 
+// IsSep returns true if s is a valid separator
+// only allowed (|-_:)
 func IsSep(s string) bool {
 	if s != "|" && s != "-" && s != "_" && s != ":" {
 		return false
 	}
+	return true
+}
+
+// IsDir returns true if s is a valid directory
+func IsDir(s string) bool {
 	return true
 }
