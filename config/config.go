@@ -26,16 +26,16 @@ type Config struct {
 type MigType map[string]string
 
 const (
-	dateFormat = "2006-01-02T15:04:05"
-	separator  = "-"
-	extension  = "js"
+	DefaultDateFormat = "2006-01-02T15:04:05"
+	DefaultSeparator  = "-"
+	DefaultExtension  = "js"
 )
 
 func New() *Config {
 	return &Config{
-		DateFormat: dateFormat,
-		Separator:  separator,
-		Extension:  extension,
+		DateFormat: DefaultDateFormat,
+		Separator:  DefaultSeparator,
+		Extension:  DefaultSeparator,
 		Types: MigType{
 			DefaultType: "",
 		},
