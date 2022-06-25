@@ -76,6 +76,7 @@ func InitCommand(cmd *cobra.Command, args []string) {
 		conf.DateFormat = scanutil.ScannNDate("Enter a date format (%s): ", 3, config.DefaultDateFormat)
 		conf.Extension = scanutil.ScannNText("Enter an extension (%s): ", 3, config.DefaultExtension, scanutil.IsExt)
 		conf.Separator = scanutil.ScannNText("Enter a separator (%s): ", 3, config.DefaultSeparator, scanutil.IsSep)
+		conf.MigDir = scanutil.ScannNText("Enter a directory (%s): ", 3, config.DefaultMigDir, scanutil.IsDir)
 	}
 	err = encoder.Encode(conf)
 	if err != nil {
