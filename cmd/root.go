@@ -7,6 +7,7 @@ package cmd
 import (
 	"os"
 
+	"github.com/dsolerh/miggen/config"
 	"github.com/spf13/cobra"
 )
 
@@ -15,20 +16,8 @@ var rootCmd = &cobra.Command{
 	Use:   "miggen",
 	Short: "A migration template based generator.",
 	Long: `A migration template based generator is uses a config file that is
-generated with the command "init". It creates a directory ".miggen" and inside
-a file ".config.{json|yaml}". The format for storage is json for default
-For example:
-	miggen init 			# prompt various config option
-	miggen init -y 		# create the config with default options
-
-For generating the migration file use the command with 
-the flags -type and -name. The type is optional and defaults to "blank"
-wich creates an empty file
-For example:
-	miggen -name=<migration-name> -type=<custom-type>
-	miggen -name=<migration-name> 		# with default type "blank"
-
-Custom types can be added to the config file .miggen/.config.{json|yaml}`,
+generated with the command "init". It creates a directory ".mig" and inside
+a file`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },
@@ -41,4 +30,9 @@ func Execute() {
 	if err != nil {
 		os.Exit(1)
 	}
+}
+
+func init() {
+	rootCmd.Flags().StringP("name", "n", "", "The migration name")
+	rootCmd.Flags().StringP("type", "t", config.DefaultType, "The migration type")
 }
