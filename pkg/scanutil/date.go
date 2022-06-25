@@ -9,7 +9,7 @@ import (
 func ScannNDate(question string, n int, def string) string {
 	reader := bufio.NewReader(os.Stdin)
 	for i := 0; i < n; i++ {
-		fmt.Print(question)
+		fmt.Printf(question, def)
 		data, err := reader.ReadString('\n')
 		if err != nil {
 			continue
