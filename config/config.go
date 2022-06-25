@@ -32,6 +32,7 @@ const (
 	DefaultDateFormat = "2006-01-02T15:04:05"
 	DefaultSeparator  = "-"
 	DefaultExtension  = "js"
+	DefaultMigDir     = "migrations"
 )
 
 func New() *Config {
@@ -39,6 +40,7 @@ func New() *Config {
 		DateFormat: DefaultDateFormat,
 		Separator:  DefaultSeparator,
 		Extension:  DefaultSeparator,
+		MigDir:     DefaultMigDir,
 		Types: MigType{
 			DefaultType: "",
 		},
