@@ -3,22 +3,29 @@ package scanutil
 import (
 	"bufio"
 	"fmt"
-	"os"
 	"path/filepath"
 )
 
-type ProcessText func(string) (string, bool)
+type ProcessText func(string) bool
 
+// ScannNText scans the content of Stdin for N times
+// it stops if fn returns ("something", true) then returns
+// "something"
+// or if the input is "" in wich case return def
 func ScannNText(question string, n int, def string, fn ProcessText) string {
-	reader := bufio.NewReader(os.Stdin)
+	reader := bufio.NewReader(in)
 	for i := 0; i < n; i++ {
-		fmt.Print(question)
+		fmt.Printf(question, def)
 		data, err := reader.ReadString('\n')
 		if err != nil {
 			continue
 		}
 		// remove the \n char
-		data, ok := fn(data[:len(data)-1])
+		data = data[:len(data)-1]
+		if data == "" {
+			break
+		}
+		ok := fn(data)
 		if !ok {
 			continue
 		} else {
@@ -29,16 +36,13 @@ func ScannNText(question string, n int, def string, fn ProcessText) string {
 	return def
 }
 
-func IsExt(s string) (string, bool) {
-	if s != filepath.Ext(s) {
-		return "", false
-	}
-	return s, true
+func IsExt(s string) bool {
+	return s == filepath.Ext(s)
 }
 
-func IsSep(s string) (string, bool) {
+func IsSep(s string) bool {
 	if s != "|" && s != "-" && s != "_" && s != ":" {
-		return "", false
+		return false
 	}
-	return s, true
+	return true
 }
