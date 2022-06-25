@@ -1,5 +1,5 @@
 /*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
+Copyright © 2022 DANIEL SOLER <dsolerh.cinter95@gmail.com>
 
 */
 package cmd
@@ -21,12 +21,12 @@ For example:
 	miggen init 			# prompt various config option
 	miggen init -y 		# create the config with default options
 
-For generating the migration file use the command "create" with 
+For generating the migration file use the command with 
 the flags -type and -name. The type is optional and defaults to "blank"
 wich creates an empty file
 For example:
-	miggen create -name=<migration-name> -type=<custom-type>
-	miggen create -name=<migration-name> 		# with default type "blank"
+	miggen -name=<migration-name> -type=<custom-type>
+	miggen -name=<migration-name> 		# with default type "blank"
 
 Custom types can be added to the config file .miggen/.config.{json|yaml}`,
 	// Uncomment the following line if your bare application
