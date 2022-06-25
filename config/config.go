@@ -16,6 +16,9 @@ type Config struct {
 	// Extension is the extension for the
 	// migration filename
 	Extension string
+	// MigDir is the directory where thw migrations are supose
+	// to be store
+	MigDir string
 	// Types is an colection of MigType
 	Types MigType
 }
