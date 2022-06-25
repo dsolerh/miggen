@@ -5,15 +5,14 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"bufio"
 	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/dsolerh/miggen/config"
 	"github.com/dsolerh/miggen/pkg/dirutils"
+	"github.com/dsolerh/miggen/pkg/scanutil"
 	"github.com/spf13/cobra"
 )
 
@@ -23,69 +22,7 @@ var initCmd = &cobra.Command{
 	Short: "Create the configuration needed for the cli.",
 	Long: `Create the configuration needed for the cli. It show a prompt
 for each configuration if the flag -y is not set.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		cwd, err := os.Getwd()
-		if err != nil {
-			fmt.Printf("err: %v\n", err)
-			return
-		}
-		path := filepath.Join(cwd, config.DirName, config.ConfName)
-		confexist, err := dirutils.Exist(path)
-		if err != nil {
-			fmt.Printf("err: %v\n", err)
-			return
-		}
-		if confexist {
-			reader := bufio.NewReader(os.Stdin)
-			var override bool
-			fmt.Println("The config file already exist in this folder.")
-			for i := 0; i < 3; i++ {
-				fmt.Printf("You want to override it (Y/n)?")
-				data, err := reader.ReadString('\n')
-				if err != nil {
-					fmt.Printf("input error: %s\n", err.Error())
-					continue
-				}
-				data = strings.ToLower(data[:len(data)-1])
-				if data == "" || data == "y" || data == "yes" {
-					override = true
-					break
-				}
-				if data == "n" || data == "no" {
-					break
-				}
-			}
-			if !override {
-				return
-			}
-		}
-
-		defconfig, err := cmd.Flags().GetBool("yes")
-		if err != nil {
-			fmt.Printf("err: %v\n", err)
-			return
-		}
-
-		f, err := os.Create(path)
-		if err != nil {
-			fmt.Printf("err: %v\n", err)
-			return
-		}
-		defer f.Close()
-
-		encoder := json.NewEncoder(f)
-		encoder.SetIndent("", "\t")
-
-		conf := config.New()
-		if defconfig {
-			err = encoder.Encode(conf)
-			if err != nil {
-				fmt.Printf("err: %v\n", err)
-				return
-			}
-		}
-
-	},
+	Run: InitCommand,
 }
 
 func init() {
@@ -93,4 +30,56 @@ func init() {
 
 	// Here you will define your flags and configuration settings.
 	initCmd.Flags().BoolP("yes", "y", false, "Use the default config")
+}
+
+func InitCommand(cmd *cobra.Command, args []string) {
+	// get cwd
+	cwd, err := os.Getwd()
+	if err != nil {
+		fmt.Printf("err: %v\n", err)
+		return
+	}
+	// join the paths
+	path := filepath.Join(cwd, config.DirName, config.ConfName)
+	// check that the path exist
+	confexist, err := dirutils.Exist(path)
+	if err != nil {
+		fmt.Printf("err: %v\n", err)
+		return
+	}
+	if confexist {
+		fmt.Println("The config file already exist in this folder.")
+		override := scanutil.ScannNChoice("You want to override it (Y/n)? ", 3, scanutil.YesOrNo)
+		if !override {
+			return
+		}
+	}
+
+	f, err := dirutils.CreateAll(path)
+	if err != nil {
+		fmt.Printf("err: %v\n", err)
+		return
+	}
+	defer f.Close()
+
+	defconfig, err := cmd.Flags().GetBool("yes")
+	if err != nil {
+		fmt.Printf("err: %v\n", err)
+		return
+	}
+
+	encoder := json.NewEncoder(f)
+	encoder.SetIndent("", "\t")
+
+	conf := config.New()
+	if !defconfig {
+		conf.DateFormat = scanutil.ScannNDate("Enter a date format: ", 3, config.DefaultDateFormat)
+		conf.Extension = scanutil.ScannNText("Enter an extension: ", 3, config.DefaultExtension, scanutil.IsExt)
+		conf.Separator = scanutil.ScannNText("Enter a separator: ", 3, config.DefaultSeparator, scanutil.IsSep)
+	}
+	err = encoder.Encode(conf)
+	if err != nil {
+		fmt.Printf("err: %v\n", err)
+		return
+	}
 }
