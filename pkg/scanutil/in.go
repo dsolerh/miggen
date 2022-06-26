@@ -6,3 +6,4 @@ import (
 )
 
 var in io.Reader = os.Stdin
+var out io.Writer = os.Stdout

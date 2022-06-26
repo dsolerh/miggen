@@ -15,7 +15,7 @@ type ProcessText func(string) bool
 func ScannNText(question string, n int, def string, fn ProcessText) string {
 	reader := bufio.NewReader(in)
 	for i := 0; i < n; i++ {
-		fmt.Printf(question, def)
+		fmt.Fprintf(out, question, def)
 		data, err := reader.ReadString('\n')
 		if err != nil {
 			continue

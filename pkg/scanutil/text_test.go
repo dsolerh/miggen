@@ -2,10 +2,12 @@ package scanutil
 
 import (
 	"bytes"
+	"io/ioutil"
 	"testing"
 )
 
 func TestScannNText(t *testing.T) {
+	out = ioutil.Discard
 	testCases := []struct {
 		desc     string
 		in       string
