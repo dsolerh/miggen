@@ -31,7 +31,7 @@ type MigType map[string]string
 const (
 	DefaultDateFormat = "2006-01-02T15:04:05"
 	DefaultSeparator  = "-"
-	DefaultExtension  = "js"
+	DefaultExtension  = ".js"
 	DefaultMigDir     = "migrations"
 )
 
