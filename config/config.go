@@ -39,7 +39,7 @@ func New() *Config {
 	return &Config{
 		DateFormat: DefaultDateFormat,
 		Separator:  DefaultSeparator,
-		Extension:  DefaultSeparator,
+		Extension:  DefaultExtension,
 		MigDir:     DefaultMigDir,
 		Types: MigType{
 			DefaultType: "",
